@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html ng-app="gigPlanner">
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <link rel="stylesheet" href="styles/vendor.css"></link>
+</head>
+<body>
+
+<nav class="navbar navbar-default">
+    <div class="container">
+        <div class="navbar-header">
+            <a ui-sref="dashboard" class="navbar-brand">GigPlanner</a>
+        </div>
+        <ul class="nav navbar-nav">
+            <li ui-sref-active="active"><a ui-sref="users">Users</a></li>
+            <li ui-sref-active="active"><a ui-sref="bands">Bands</a></li>
+            <li ui-sref-active="active"><a ui-sref="events">Events</a></li>
+        </ul>
+    </div>
+</nav>
+
+<div ui-view class="container"></div>
+
+<script src="scripts/vendor.js"></script>
+<script src="scripts/main.js"></script>
+</body>
+</html>
