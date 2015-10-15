@@ -1,0 +1,25 @@
+<h2>Login with: </h2>
+<ul>
+    <li><a href="http://localhost:8080/auth/facebook">Facebook</a></li>
+</ul>
+
+<h2>Login locally: </h2>
+
+<form ng-submit="login()" class="form-horizontal" name="loginForm">
+    <div class="form-group">
+        <label for="username" class="col-sm-2">Email:</label>
+        <div class="col-sm-10">
+            <input type="email" id="username" ng-model="user.username" class="form-control">
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="password" class="col-sm-2">Password:</label>
+        <div class="col-sm-10">
+            <input type="password" id="password" ng-model="user.password" class="form-control">
+        </div>
+    </div>
+    <input type="submit" value="Login">
+</form>
+<hr />
+<a ui-sref="signup">Or signup here</a>
+

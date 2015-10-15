@@ -1,0 +1,18 @@
+<ol class="breadcrumb">
+    <li><a ui-sref="dashboard">Home</a></li>
+    <li><a ui-sref="bands">Bands</a></li>
+    <li class="active">{{ band.name }}</li>
+</ol>
+
+
+<h1>{{ band.name }}</h1>
+
+<form class="form-horizontal" name="editBandForm" ng-submit="band.$update()">
+    <div class="form-group">
+        <label for="name" class="col-sm-2">Naam</label>
+        <div class="col-sm-10">
+            <input type="text" ng-model="band.name" class="form-control" id="name" placeholder="Guns n Roses" required>
+        </div>
+    </div>
+    <button type="submit" ng-disabled="editBandForm.$invalid">Save</button>
+</form>

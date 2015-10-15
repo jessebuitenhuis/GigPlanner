@@ -2,10 +2,10 @@
 <html ng-app="gigPlanner">
 <head lang="en">
     <meta charset="UTF-8">
-    <title></title>
-    <link rel="stylesheet" href="styles/vendor.css"></link>
+    <title>GigPlanner</title>
+    <link rel="stylesheet" href="styles/vendor.css" />
 </head>
-<body>
+<body ng-controller="ApplicationController">
 
 <nav class="navbar navbar-default">
     <div class="container">
@@ -16,6 +16,11 @@
             <li ui-sref-active="active"><a ui-sref="users">Users</a></li>
             <li ui-sref-active="active"><a ui-sref="bands">Bands</a></li>
             <li ui-sref-active="active"><a ui-sref="events">Events</a></li>
+        </ul>
+        <ul class=" nav navbar-nav navbar-right" ng-switch="account.isLoggedIn()">
+            <li ui-sref-active="active" ng-switch-when="false"><a ui-sref="login">Login</a></li>
+            <li ng-switch-when="true"><a><strong><img src="{{account.user.avatar}}" width="15" height="15"> {{ account.user.name.full }}</strong></a></li>
+            <li ui-sref-active="active" ng-switch-when="true"><a href ng-click="account.logout()">Logout</a></li>
         </ul>
     </div>
 </nav>

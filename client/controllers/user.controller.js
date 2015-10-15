@@ -1,8 +1,6 @@
 angular.module('gigPlanner').controller('UserController', function(User, $scope){
 
-    User.query(function(result){
-        $scope.users = result;
-    });
+    $scope.users = User.query();
 
     $scope.deleteUser = function(user){
         user.$delete(function(){

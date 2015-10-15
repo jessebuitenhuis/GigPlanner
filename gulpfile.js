@@ -1,11 +1,15 @@
-var concat = require('gulp-concat');
-var gulp = require('gulp');
-var uglify = require('gulp-uglify');
-var minify = require('gulp-minify-css');
+var concat          = require('gulp-concat'),
+    gulp            = require('gulp'),
+    watch           = require('gulp-watch'),
+    uglify          = require('gulp-uglify'),
+    minify          = require('gulp-minify-css'),
+    templateCache   = require('gulp-angular-templatecache'),
+    annotate      = require('gulp-ng-annotate');
 
 var scripts = {
     main: [
-        'client/scripts/**/*.js'
+        'client/app.js',
+        'client/**/*.js'
     ],
     vendor: [
         'node_modules/angular/angular.js',
@@ -21,22 +25,28 @@ var styles = {
     main: [
 
     ]
-}
+};
 
-gulp.task('default', ['scripts', 'styles']);
+var templates = 'client/**/*.html';
+
+gulp.task('default', ['renderTemplates', 'scripts', 'styles']);
 
 gulp.task('watch', function(){
+    gulp.watch(templates, ['renderTemplates']);
     gulp.watch([scripts.vendor, scripts.main], ['scripts']);
     gulp.watch([styles.vendor, styles.main], ['styles']);
 });
 
 gulp.task('scripts', function(){
     gulp.src(scripts.vendor)
-       .pipe(concat('vendor.js'))
-       .pipe(gulp.dest('public/scripts'));
+        .pipe(concat('vendor.js'))
+        .pipe(uglify())
+        .pipe(gulp.dest('public/scripts'));
 
     gulp.src(scripts.main)
         .pipe(concat('main.js'))
+        .pipe(annotate())
+        .pipe(uglify())
         .pipe(gulp.dest('public/scripts'));
 });
 
@@ -50,5 +60,11 @@ gulp.task('styles', function(){
         .pipe(concat('main.css'))
         .pipe(minify())
         .pipe(gulp.dest('public/styles'));
+});
+
+gulp.task('renderTemplates', function(){
+   gulp.src(templates)
+       .pipe(templateCache('app.templates.js', {standalone: true}))
+       .pipe(gulp.dest('client'));
 });
 

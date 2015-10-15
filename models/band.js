@@ -1,13 +1,9 @@
-var crud = require('../helpers.crud');
+var mongoose = require('mongoose'),
+    Schema = mongoose.Schema;
 
-exports.get = function(cb){
-    crud.get('bands', cb);
-};
-exports.find = crud.get;
-exports.create = function(band, cb) {
-    crud.create('Band', band, cb);
-};
-exports.update = function(band, cb) {
-    crud.update('Band', band, cb);
-};
-exports.remove = crud.remove;
+var bandSchema = new Schema({
+    name: String
+});
+
+var Band = mongoose.model('Band', bandSchema);
+module.exports = Band;

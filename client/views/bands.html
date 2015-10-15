@@ -1,0 +1,27 @@
+<ol class="breadcrumb">
+    <li><a ui-sref="dashboard">Home</a></li>
+    <li class="active">Bands</li>
+</ol>
+
+<h1>Bands</h1>
+
+<form class="form-inline" ng-submit="addBand(newBand)" name="addBandForm">
+    <div class="form-group">
+        <label for="name">Naam</label>
+        <input type="text" ng-model="newBand.name" class="form-control" id="name" placeholder="Guns n Roses" required>
+    </div>
+    <button type="submit" ng-disabled="addBandForm.$invalid">Add Band</button>
+</form>
+<br/>
+
+<table class="table table-striped table-hover">
+    <tr>
+        <th>Naam</th>
+        <th>Verwijder</th>
+    </tr>
+    <tr ng-repeat="band in bands">
+        <td><a ui-sref="band({id:band._id})">{{ band.name }}</a></td>
+
+        <td><button ng-click="deleteBand(band)">Delete</button></td>
+    </tr>
+</table>
