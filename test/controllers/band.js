@@ -1,7 +1,7 @@
 /* global auth */
 var config      = require('../../config/config.test'),
     expect      = require('chai').expect,
-    request     = new require('supertest')(config.url + '/api/band'),
+    request     = new require('supertest')(config.url + '/api/bands'),
     User        = new require('../../models/user'),
     Band        = require('../../models/band'),
     db          = require('../db');

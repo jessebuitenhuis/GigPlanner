@@ -3,7 +3,7 @@ var Band = require('../models/band.js');
 module.exports = function(app, express) {
 
     var router = express.Router();
-    app.use('/api/band', router);
+    app.use('/api/bands', router);
 
     router.get('/', function(req, res, next) {
         Band.find({}, function (err, bands) {

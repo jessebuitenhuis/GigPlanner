@@ -3,7 +3,7 @@ var User = require('../models/user');
 module.exports = function(app, express) {
 
     var router = express.Router();
-    app.use('/api/user', router);
+    app.use('/api/users', router);
 
     router.get('/', function(req, res, next) {
         User.find({}, function (err, users) {

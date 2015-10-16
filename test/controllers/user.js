@@ -1,7 +1,7 @@
 /* global users, auth */
 var config      = require('../../config/config.test'),
     expect      = require('chai').expect,
-    request     = new require('supertest')(config.url + '/api/user');
+    request     = new require('supertest')(config.url + '/api/users');
 
 describe('Controller: User', function(){
     // GET

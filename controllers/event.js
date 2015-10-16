@@ -3,7 +3,7 @@ var Event = require('../models/event.js');
 module.exports = function(app, express) {
 
     var router = express.Router();
-    app.use('/api/event', router);
+    app.use('/api/events', router);
 
     router.get('/', function(req, res, next) {
         Event.find({}, function (err, events) {
