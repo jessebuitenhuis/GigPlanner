@@ -38,6 +38,9 @@
     "passport-jwt": "^1.2.1",
     "passport-local": "^1.0.0",
     "path": "^0.12.7",
-    "supertest": "^1.1.0"
+    "superagent": "^1.4.0",
+    "superagent-defaults": "^0.1.13",
+    "supertest": "^1.1.0",
+    "underscore": "^1.8.3"
   }
 }

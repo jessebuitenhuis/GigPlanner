@@ -14,6 +14,8 @@ module.exports = function(app, express) {
     router.get('/:id', function(req, res, next){
         Band.findById(req.params.id, function (err, band) {
             if (err) return next(err);
+            if (!band) return res.sendStatus(404);
+
             res.send(band);
         });
     });
@@ -27,13 +29,15 @@ module.exports = function(app, express) {
     router.put('/:id?', function(req, res, next){
         Band.findByIdAndUpdate(req.body._id, req.body, {new: true}, function(err, band){
             if (err) return next(err);
+            if (!band) return next(null, false);
+
             res.send(band);
         });
     });
     router.delete('/:id', function(req, res, next){
         Band.findByIdAndRemove(req.params.id, function(err){
             if (err) return next(err);
-            res.sendStatus(200);
+            res.sendStatus(204);
         });
     });
 };

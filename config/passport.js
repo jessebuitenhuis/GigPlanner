@@ -1,7 +1,7 @@
 var JwtStrategy     = require('passport-jwt').Strategy,
     LocalStrategy   = require('passport-local').Strategy,
-    FacebookStrategy    = require('passport-facebook').Strategy,
-    User            = require('../models/user'),
+    FacebookStrategy= require('passport-facebook').Strategy,
+    User            = new require('../models/user'),
     tokenConfig     = require('./token.js');
 
 module.exports = function(passport) {
