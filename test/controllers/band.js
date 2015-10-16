@@ -142,4 +142,60 @@ describe('Controller: Band', function(){
                 });
         });
     });
+
+    describe('bandMembers', function(){
+
+        beforeEach(function(done){
+            Band.findByIdAndUpdate(coldplay._id, {members: coldplay.members}, done);
+        });
+
+        // GET
+        it('should get the members in an existing band', function(done){
+            request.get('/' + coldplay._id + '/members')
+                .set(auth)
+                .expect(200, function(err, res){
+                    if (err) return done(err);
+                    expect(res.body).to.have.length(4);
+                    done();
+                });
+        });
+
+        // POST
+        it('should add a member to an existing band and return the bandmember', function(done){
+            request.post('/' + coldplay._id + '/members/' + db.users.admin._id)
+                .set(auth)
+                .expect(200, function(err, res){
+                    if (err) return done(err);
+                    expect(res.body[4].user).to.equal(db.users.admin._id);
+                    done();
+                });
+        });
+        it('should add multiple members to an existing band and return an array of bandmembers', function(done){
+            request.post('/' + coldplay._id + '/members')
+                .set(auth)
+                .send([db.users.admin._id, db.users.henk._id])
+                .expect(200, function(err, res){
+                    if (err) return done(err);
+                    expect(res.body).to.have.length(6);
+                    done();
+                });
+        });
+
+        // DELETE
+        it('should remove a member from a band', function(done){
+            request.delete('/' + coldplay._id + '/members/' + chris._id)
+                .set(auth)
+                .expect(204, function(err){
+                    if (err) return done(err);
+
+                    // verify bandmember has been removed
+                    Band.findById(coldplay._id, function(err, band){
+                        expect(band.members).to.have.length(3);
+                        done();
+                    });
+                });
+        });
+
+
+    });
 });

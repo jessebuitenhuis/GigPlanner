@@ -40,4 +40,54 @@ module.exports = function(app, express) {
             res.sendStatus(204);
         });
     });
+
+    // Bandmembers
+    router.get('/:id/members', function(req, res, next){
+        Band.findById(req.params.id, function(err, band){
+            if (err) return next(err);
+            if (!band) return res.sendStatus(404);
+            res.status(200);
+            res.send(band.members);
+        });
+    });
+
+    router.post('/:id/members/:userId?', function(req, res, next){
+        Band.findById(req.params.id, function(err, band){
+            if (err) return next(err);
+
+            if (!band) res.sendStatus(404);
+
+            if (req.params.userId) {
+                band.addMembers(req.params.userId);
+            } else {
+                if (!Array.isArray(req.body)) return res.sendStatus(400);
+                band.addMembers(req.body);
+            }
+
+            band.save(function(err, band){
+                if (err) next(err);
+
+                res.status(200);
+                res.send(band.members);
+            });
+
+        });
+    });
+
+    router.delete('/:id/members/:userId', function(req, res, next){
+        Band.findById(req.params.id, function(err, band){
+            if (err) return next(err);
+            if (!band) return res.sendStatus(404);
+
+            band.removeMember(req.params.userId, function(err){
+                if (err) return res.sendStatus(404);
+
+                band.save(function(err, band){
+                    if (err) return next(err);
+
+                    res.sendStatus(204);
+                });
+            });
+        });
+    });
 };
