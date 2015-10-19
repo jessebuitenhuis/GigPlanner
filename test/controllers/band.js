@@ -13,6 +13,7 @@ describe('Controller: Band', function(){
         jonny = new User(db.users.jonny),
         guy = new User(db.users.guy),
         will = new User(db.users.will),
+        henk = new User(db.users.henk),
         bandMembers = [chris, jonny, guy, will];
 
     before(function(done){
@@ -161,31 +162,42 @@ describe('Controller: Band', function(){
         });
 
         // POST
-        it('should add a member to an existing band and return the bandmember', function(done){
+        it('should add a member to an existing band and return band with populated members', function(done){
             request.post('/' + coldplay._id + '/members/' + db.users.admin._id)
                 .set(auth)
                 .expect(200, function(err, res){
                     if (err) return done(err);
-                    expect(res.body[4].user).to.equal(db.users.admin._id);
+                    expect(res.body.members[4].user.name.first).to.equal(db.users.admin.name.first);
                     done();
                 });
         });
-        it('should add multiple members to an existing band and return an array of bandmembers', function(done){
-            request.post('/' + coldplay._id + '/members')
-                .set(auth)
-                .send([db.users.admin._id, db.users.henk._id])
-                .expect(200, function(err, res){
-                    if (err) return done(err);
-                    expect(res.body).to.have.length(6);
-                    done();
-                });
+        it('should add multiple members to an existing band and return the band with populated members', function(done){
+            henk.save(function(err, henk){
+                if (err) return done(err);
+
+                request.post('/' + coldplay._id + '/members')
+                    .set(auth)
+                    .send([db.users.admin._id, henk._id])
+                    .expect(200, function(err, res){
+                        if (err) return done(err);
+
+                        expect(res.body.members).to.have.length(6);
+                        expect(res.body.members[4].user.name.first).to.equal(db.users.admin.name.first);
+                        expect(res.body.members[5].user.name.first).to.equal(henk.name.first);
+
+                        //Cleanup
+                        User.findById(henk._id).remove(done);
+
+                    });
+            });
+
         });
 
         // DELETE
         it('should remove a member from a band', function(done){
-            request.delete('/' + coldplay._id + '/members/' + chris._id)
+            request.delete('/' + coldplay.id + '/members/' + coldplay.members[0].id)
                 .set(auth)
-                .expect(204, function(err){
+                .expect(200, function(err){
                     if (err) return done(err);
 
                     // verify bandmember has been removed

@@ -1,15 +1,21 @@
 angular.module('gigPlanner', [
     'ngResource',
     'ui.router',
-    'templates'
+    'templates',
+    'ui.bootstrap'
 ]);
 
 angular.module('gigPlanner').constant('AuthEvents', {
    "logout": 'auth-logout'
 });
 
-angular.module('gigPlanner').config(function($httpProvider){
+angular.module('gigPlanner').config(function($httpProvider, $resourceProvider){
     $httpProvider.interceptors.push('authInterceptor');
+
+    // Add a default PUT method to ngResource
+    angular.extend($resourceProvider.defaults.actions, {
+        update: { method: 'PUT'}
+    });
 });
 
 angular.module('gigPlanner').run(function($rootScope, Account, AuthEvents, api, $state){

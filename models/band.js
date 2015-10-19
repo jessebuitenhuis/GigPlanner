@@ -6,30 +6,47 @@ var bandSchema = new Schema({
     name: String,
     members: [{
         roles: [String],
-        user: { type: Schema.Types.ObjectId, ref:'User' }
+        user: { type: Schema.Types.ObjectId, ref:'User', required: true}
     }]
 });
 
-bandSchema.methods.addMembers = function(members) {
+bandSchema.methods.addMembers = function(members, done) {
     if (!Array.isArray(members)) members = [members];
 
-    members = members.map(function(member){
+    var existingMembers = this.members.map(function(member){
+        return member.user.toString();
+    });
+    var members = members.map(function(member){
+        return member.toString();
+    });
+    var membersToAdd = _.difference(members, existingMembers);
+
+    if (!membersToAdd.length) return done(new Error('All users provided are already linked to this band.'));
+
+    membersToAdd = membersToAdd.map(function(member){
         return {
             roles: [],
             user: member
         };
     });
 
-    this.members.push.apply(this.members, members);
-};
-bandSchema.methods.removeMember = function(userId, done){
-    var index = _.findIndex(this.members, function(member){
-        return member.user == userId;
+    this.members.push.apply(this.members, membersToAdd);
+    this.save(function(err, band){
+        Band.populate(band, 'members.user', done);
     });
+};
+bandSchema.methods.removeMember = function(id, done){
+    var index = _.findIndex(this.members, function(member){
+        return member.id == id;
+    });
+
     if (index == -1) return done(new Error('Bandmember not found.'));
     this.members.splice(index, 1);
-    done();
+    this.save(function(err, band){
+        Band.populate(band, 'members.user', done);
+    });
 };
+
 
 var Band = mongoose.model('Band', bandSchema);
 module.exports = Band;

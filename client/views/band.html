@@ -16,3 +16,20 @@
     </div>
     <button type="submit" ng-disabled="editBandForm.$invalid">Save</button>
 </form>
+
+<h2>Bandmembers</h2>
+<div><button ng-click="selectUser()">Select user</button></div>
+<br/>
+<div class="alert alert-warning" ng-if="error">{{ error }}</div>
+
+<table class="table table-striped table-hover">
+    <tr>
+        <th>Naam</th>
+        <th>Verwijder</th>
+    </tr>
+    <tr ng-repeat="member in band.members">
+        <td><a ui-sref="user({id:member.user._id})">{{ member.user.name.full }}</a></td>
+
+        <td><button ng-click="band.$removeMember({id: band._id, memberId: member._id})">Remove member</button></td>
+    </tr>
+</table>
