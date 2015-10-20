@@ -1,6 +1,7 @@
 var mongoose = require('mongoose'),
     Schema = mongoose.Schema,
-    _   = require('underscore');
+    _   = require('underscore'),
+    helpers = require('../helpers');
 
 var bandSchema = new Schema({
     name: String,
@@ -13,14 +14,7 @@ var bandSchema = new Schema({
 bandSchema.methods.addMembers = function(members, done) {
     if (!Array.isArray(members)) members = [members];
 
-    var existingMembers = this.members.map(function(member){
-        return member.user.toString();
-    });
-    var members = members.map(function(member){
-        return member.toString();
-    });
-    var membersToAdd = _.difference(members, existingMembers);
-
+    var membersToAdd = helpers.uniqueItems(members, this.members, 'user');
     if (!membersToAdd.length) return done(new Error('All users provided are already linked to this band.'));
 
     membersToAdd = membersToAdd.map(function(member){
