@@ -1,18 +1,18 @@
-angular.module('gigPlanner').controller('EventDetailController', function(Event, $scope, $stateParams, Modal, $timeout){
+angular.module('gigPlanner').controller('EventDetailController', function(Event, User, $scope, $stateParams, Modal, $timeout){
 
     $scope.event = Event.get({id: $stateParams.id});
 
     $scope.selectUser = function() {
-        var selected = $scope.event.users.map(function(user){
-            return user.user._id;
-        });
-        Modal.open('SelectUser', {selected: selected}).then(function(user){
-            $scope.event.$addUser({userId: user._id}).catch(function(e){
+        Modal.selectUser('event', $scope.event)
+            .then(function (user) {
+                return $scope.event.$addUser({userId: user._id});
+            })
+            .catch(function (e) {
                 $scope.usersError = e.data;
-                $timeout(function(){
+                $timeout(function () {
                     $scope.usersError = null;
                 }, 1000);
-            });
+
         });
     };
 

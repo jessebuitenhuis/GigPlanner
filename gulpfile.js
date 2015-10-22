@@ -48,7 +48,7 @@ gulp.task('scripts', function(){
     gulp.src(scripts.main)
         .pipe(concat('main.js'))
         .pipe(annotate())
-        .pipe(uglify())
+        //.pipe(uglify())
         .pipe(gulp.dest('public/scripts'));
 });
 

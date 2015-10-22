@@ -2,7 +2,8 @@ var mongoose    = require('mongoose'),
     Schema      = mongoose.Schema,
     bcrypt      = require('bcrypt'),
     tokenConfig = require('../config/token'),
-    jwt = require('jsonwebtoken');
+    jwt = require('jsonwebtoken'),
+    _ = require('underscore');
 
 var userSchema = new Schema({
     name: {
@@ -19,7 +20,8 @@ var userSchema = new Schema({
             value: String
         }]
     },
-    avatar: String
+    avatar: String,
+    selected: Boolean
 });
 
 userSchema.virtual('name.full').get(function(){
@@ -50,6 +52,42 @@ userSchema.methods.saveAndFind = function(done) {
     this.save(function(err, user) {
         if (err) return done(err);
         User.findById(user._id, done);
+    });
+};
+
+// Statics =================================================
+userSchema.statics.findLinkedToEvent = function(eventId, done) {
+    User.find({}, function(err, users) {
+        if (err) return done(err);
+        if (!users) return done();
+
+        Event.findById(eventId).populate('bands.band').exec(function(err, event) {
+            if (err) return done(err);
+
+            // find linked Users (direct)
+            var linkedUsers = event.users.map(function(user){
+                return user.user.toString();
+            });
+
+            // add linked Users (through band connection)
+            event.bands.forEach(function(band) {
+                var usersInBand = band.band.members.map(function (member) {
+                    return member.user.toString();
+                });
+                linkedUsers.push.apply(linkedUsers, usersInBand);
+            });
+
+            // add selected property if user is in linkedUser list
+            users.forEach(function(user){
+                if (linkedUsers.indexOf(user.id) != -1) {
+                    user.selected = true;
+                } else {
+                    user.selected = false;
+                }
+            });
+
+            done(null, users);
+        });
     });
 };
 

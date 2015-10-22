@@ -6,10 +6,18 @@ module.exports = function(app, express) {
     app.use('/api/users', router);
 
     router.get('/', function(req, res, next) {
-        User.find({}, function (err, users) {
-            if (err) return next(err);
-            res.send(users);
-        });
+        if (req.query.view == 'linked' && req.query.event) {
+            User.findLinkedToEvent(req.query.event, function(err, users){
+                if (err) return next(err);
+
+                return res.status(200).send(users);
+            });
+        } else {
+            User.find({}, function (err, users) {
+                if (err) return next(err);
+                return res.send(users);
+            });
+        }
     });
     router.get('/:id', function(req, res, next){
         User.findById(req.params.id, function (err, user) {
