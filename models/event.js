@@ -38,7 +38,7 @@ eventSchema.methods.addBands = function(bands, done){
 
     this.bands.push.apply(this.bands, bandsToAdd);
     this.save(function(err, event){
-        Event.populate(event, 'bands.band', done);
+        Event.populate(event, 'users.user bands.band', done);
     });
 };
 eventSchema.methods.removeBand = function(docId, done){
@@ -49,7 +49,7 @@ eventSchema.methods.removeBand = function(docId, done){
     this.save(function(err, event){
         if (err) return done(err);
 
-        Event.populate(event, 'bands.band', done);
+        Event.populate(event, 'users.user bands.band', done);
     });
 };
 eventSchema.methods.addUsers = function(users, done){
@@ -85,7 +85,7 @@ eventSchema.methods.addUsers = function(users, done){
 
         _this.users.push.apply(_this.users, usersToAdd);
         _this.save(function(err, event){
-            Event.populate(event, 'users.user', done);
+            Event.populate(event, 'users.user bands.band', done);
         });
     });
 };
@@ -97,7 +97,7 @@ eventSchema.methods.removeUser = function(docId, done){
     this.save(function(err, event){
         if (err) return done(err);
 
-        Event.populate(event, 'users.user', done);
+        Event.populate(event, 'users.user bands.band', done);
     });
 };
 

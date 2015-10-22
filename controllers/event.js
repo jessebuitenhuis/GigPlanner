@@ -12,9 +12,12 @@ module.exports = function(app, express) {
         });
     });
     router.get('/:id', function(req, res, next){
-        Event.findById(req.params.id, function (err, event) {
-            if (err) return next(err);
-            res.send(event);
+        Event.findById(req.params.id)
+            .populate('users.user bands.band')
+            .exec(function (err, event) {
+                if (err) return next(err);
+
+                res.send(event);
         });
     });
     router.post('/', function(req, res, next){
@@ -38,12 +41,14 @@ module.exports = function(app, express) {
     });
 
     // Users
-    router.put('/:id/users', function(req, res, next){
+    router.post('/:id/users/:userId', function(req, res, next){
         Event.findById(req.params.id, function(err, event){
             if (err) return next(err);
+            if (!event) return res.status(404);
 
-            event.addUsers(req.body._id, function(err, event){
+            event.addUsers(req.params.userId, function(err, event){
                 if (err) return next(err);
+                if (!event) return next(new Error());
 
                 res.status(200).send(event);
             });
@@ -62,11 +67,11 @@ module.exports = function(app, express) {
     });
 
     // Bands
-    router.put('/:id/bands', function(req, res, next){
+    router.post('/:id/bands/:userId', function(req, res, next){
         Event.findById(req.params.id, function(err, event){
             if (err) return next(err);
 
-            event.addBands(req.body._id, function(err, event){
+            event.addBands(req.params.userId, function(err, event){
                 if (err) return next(err);
 
                 res.status(200).send(event);

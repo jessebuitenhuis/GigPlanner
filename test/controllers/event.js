@@ -90,9 +90,8 @@ describe("Controller: Event", function(){
 
     // USERS
     it("should add a user to an event", function(done){
-        request.put('/' + event1._id + '/users')
+        request.post('/' + event1._id + '/users/' + henk._id)
             .set(auth)
-            .send(henk)
             .expect(200, function(err, res){
                 if (err) return done(err);
 
@@ -125,9 +124,8 @@ describe("Controller: Event", function(){
 
     // Bands
     it("should add a band to an event", function(done){
-        request.put('/' + event1._id + '/bands')
+        request.post('/' + event1._id + '/bands/' + band1._id)
             .set(auth)
-            .send(band1)
             .expect(200, function(err, res){
                 if (err) return done(err);
 
