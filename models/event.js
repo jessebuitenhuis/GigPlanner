@@ -60,6 +60,7 @@ eventSchema.methods.addUsers = function(users, done){
     var linkedUsers = [];
     var _this = this;
 
+    // @TODO Refactor to something more beautiful
     // List all users linked trough bands
     Event.populate(_this, 'bands.band', function(err, event){
         event.bands.forEach(function(band){

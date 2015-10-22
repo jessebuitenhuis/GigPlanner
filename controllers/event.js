@@ -33,7 +33,55 @@ module.exports = function(app, express) {
     router.delete('/:id', function(req, res, next){
         Event.findByIdAndRemove(req.params.id, function(err){
             if (err) return next(err);
-            res.sendStatus(200);
+            res.sendStatus(204);
+        });
+    });
+
+    // Users
+    router.put('/:id/users', function(req, res, next){
+        Event.findById(req.params.id, function(err, event){
+            if (err) return next(err);
+
+            event.addUsers(req.body._id, function(err, event){
+                if (err) return next(err);
+
+                res.status(200).send(event);
+            });
+        });
+    });
+    router.delete('/:id/users/:docId', function(req, res, next){
+        Event.findById(req.params.id, function(err, event){
+            if (err) return next(err);
+
+            event.removeUser(req.params.docId, function(err, event){
+                if (err) return next(err);
+
+                res.status(200).send(event);
+            });
+        });
+    });
+
+    // Bands
+    router.put('/:id/bands', function(req, res, next){
+        Event.findById(req.params.id, function(err, event){
+            if (err) return next(err);
+
+            event.addBands(req.body._id, function(err, event){
+                if (err) return next(err);
+
+                res.status(200).send(event);
+            });
+        });
+    });
+    router.delete('/:id/bands/:docId', function(req, res, next){
+        Event.findById(req.params.id, function(err, event){
+            if (err) return next(err);
+
+            event.removeBand(req.params.docId, function(err, event){
+                if (err) return next(err);
+
+                res.status(200).send(event);
+            });
         });
     });
 };

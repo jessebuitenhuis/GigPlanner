@@ -9,6 +9,7 @@ var request     = require('supertest'),
 
 // Global Test Vars
 users   = db.users;
+events  = db.events;
 auth    = {'Authorization': null};
 
 before(function(done){

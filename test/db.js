@@ -57,6 +57,17 @@ var db = {
         radiohead: {
             name: 'Radiohead'
         }
+    },
+    events: {
+        event1: {
+            name: 'Event1'
+        },
+        event2: {
+            name: 'Event2'
+        },
+        event3: {
+            name: 'Event3'
+        }
     }
 };
 
