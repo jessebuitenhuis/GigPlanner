@@ -6,8 +6,10 @@ module.exports = function(app, express) {
     app.use('/api/events', router);
 
     router.get('/', function(req, res, next) {
-        Event.find({}, function (err, events) {
+        Event.find({})
+            .exec(function (err, events) {
             if (err) return next(err);
+
             res.send(events);
         });
     });
@@ -24,7 +26,11 @@ module.exports = function(app, express) {
         var newEvent = new Event(req.body);
         newEvent.save(function(err, event){
             if (err) return next(err);
-            res.send(event);
+
+            Event.populate(event, 'users.user bands.band', function(err){
+                if (err) return next(err);
+                res.send(event);
+            });
         });
     });
     router.put('/:id?', function(req, res, next){
