@@ -61,21 +61,21 @@ userSchema.statics.findLinkedToEvent = function(eventId, done) {
         if (err) return done(err);
         if (!users) return done();
 
-        Event.findById(eventId).populate('bands.band').exec(function(err, event) {
+        Event.findById(eventId).populate('band').exec(function(err, event) {
             if (err) return done(err);
 
             // find linked Users (direct)
             var linkedUsers = event.users.map(function(user){
-                return user.user.toString();
+                return user.toString();
             });
 
-            // add linked Users (through band connection)
-            event.bands.forEach(function(band) {
-                var usersInBand = band.band.members.map(function (member) {
+            if (event.band) {
+                // add linked Users (through band connection)
+                var usersInBand = event.band.members.map(function (member) {
                     return member.user.toString();
                 });
                 linkedUsers.push.apply(linkedUsers, usersInBand);
-            });
+            }
 
             // add selected property if user is in linkedUser list
             users.forEach(function(user){

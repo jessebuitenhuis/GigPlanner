@@ -48,14 +48,14 @@ describe("Controller: Event", function(){
 
     function addUserAndBandToEvent() {
         return Event.findByIdAndUpdate(event1._id, {
-            users: [{user: henk._id}],
-            bands: [{band: band1._id  }]
+            users: [henk._id],
+            band: band1._id
         });
     }
 
     function expectPopulatedEvent(res) {
-        expect(res.body.users[0].user.name.first).to.equal(henk.name.first);
-        expect(res.body.bands[0].band.name).to.equal(band1.name);
+        expect(res.body.users[0].name.first).to.equal(henk.name.first);
+        expect(res.body.band.name).to.equal(band1.name);
     }
 
     // GET
@@ -84,8 +84,8 @@ describe("Controller: Event", function(){
 
     // POST
     it('should save a new event and return the event with populated bands and users (POST /)', function(done){
-        db.events.event3.users = [{user: henk._id}];
-        db.events.event3.bands = [{band: band1._id}];
+        db.events.event3.users = [henk._id];
+        db.events.event3.band = band1._id;
 
         request.post('/')
             .set(auth)
@@ -116,60 +116,29 @@ describe("Controller: Event", function(){
 
     // USERS
     it("should add a user to an event and return the event populated with users and bands", function(done){
-        event1.update({bands: [{band: band1._id}]}, function(err, res){
+        event1.update({band: band1._id}, function(err, res){
             request.post('/' + event1._id + '/users/' + henk._id)
                 .set(auth)
                 .expect(200, function(err, res){
                     if (err) return done(err);
 
                     expectPopulatedEvent(res);
-                    expect(res.body.users[0].user._id.toString()).to.equal(henk._id.toString());
+                    expect(res.body.users[0]._id.toString()).to.equal(henk._id.toString());
                     done();
                 });
         });
     });
-    it("should remove a user from an event and return the event populated with users and bands", function(done) {
-        Event.findByIdAndUpdate(event1._id, {users: [ { user: henk._id }], bands: [{band: band1._id}]}, {new:true}, function (err, event) {
+    it("should remove a user from an event and return the event", function(done) {
+        Event.findByIdAndUpdate(event1._id, {users: [henk._id], band: band1._id}, {new:true}, function (err, event) {
             if (err) return done(err);
 
-            request.delete('/' + event1._id + '/users/' + event.users[0]._id)
+
+            request.delete('/' + event1._id + '/users/' + event.users[0])
                 .set(auth)
                 .expect(200, function (err, res) {
                     if (err) return done(err);
 
                     expect(res.body.users).to.have.length(0);
-                    expect(res.body.bands[0].band.name).to.equal(band1.name);
-
-                    done();
-                });
-        });
-    });
-
-    // Bands
-    it("should add a band to an event and return populated with bands and users", function(done){
-        Event.findByIdAndUpdate(event1._id, {users: [{user: henk._id}]}, {new: true}, function(err, res){
-            request.post('/' + event1._id + '/bands/' + band1._id)
-                .set(auth)
-                .expect(200, function(err, res){
-                    if (err) return done(err);
-
-                    expectPopulatedEvent(res);
-                    expect(res.body.bands[0].band._id.toString()).to.equal(band1._id.toString());
-                    done();
-                });
-        });
-    });
-    it("should remove a band from an event and return populated with bands and users", function(done){
-        Event.findByIdAndUpdate(event1._id, {users: [{user: henk._id}], bands: [ { band: band1._id }, {band: band2._id}]}, {new:true}, function (err, event) {
-            if (err) return done(err);
-
-            request.delete('/' + event1._id + '/bands/' + event.bands[1]._id)
-                .set(auth)
-                .expect(200, function (err, res) {
-                    if (err) return done(err);
-
-                    expect(res.body.bands).to.have.length(1);
-                    expectPopulatedEvent(res);
 
                     done();
                 });

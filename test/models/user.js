@@ -64,8 +64,8 @@ describe("Model: User", function(){
         });
 
         it("should add a selected field to the user to indicate link to document", function(done){
-            event1.users.push({user: user1._id});
-            event1.bands.push({band: band1._id});
+            event1.users.push(user1._id);
+            event1.band = band1._id;
             band1.members.push({user: user2._id});
 
             band1.save(function(err, user){

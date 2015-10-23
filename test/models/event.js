@@ -50,54 +50,6 @@ describe("Model: Event", function(){
     });
 
 
-    it("should add one band to the event", function(done){
-        event.addBands(band1.id, function(err, event){
-            if (err) return done(err);
-            expect(event.bands).to.have.length(1);
-            done();
-        });
-    });
-    it("should add multiple bands to the event", function(done){
-        event.addBands([band1.id, band2.id], function(err, event){
-            if (err) return done(err);
-            expect(event.bands).to.have.length(2);
-            done();
-        });
-    });
-    it("should not add a duplicate band to the event", function(done){
-        event.addBands(band1.id, function(err, event){
-            if (err) return done(err);
-
-            Event.findById(event.id, function(err, event){
-                if (err) return done(err);
-
-                event.addBands(band1.id, function(err, event){
-                    expect(err).to.not.equal(null);
-                    done();
-                });
-            });
-        });
-    });
-    it("should add 1 band if 2 bands are provided but 1 is already in the event", function(done){
-        event.addBands(band1.id, function(err, event){
-            if (err) return done(err);
-
-            Event.findById(event._id, function(err, event){
-                if (err) return done(err);
-
-                event.addBands([band1.id, band2.id], function(err, event){
-                    if (err) return done(err);
-
-                    expect(event.bands).to.have.length(2);
-                    done();
-                });
-            });
-        });
-    });
-    //it("should remove a user who is linked to the event, and is a member of the provided band", function(){
-    //
-    //});
-
     it("should add one user to the event", function(done){
         event.addUsers(user1.id, function(err, event){
             if (err) return done(err);
@@ -143,54 +95,27 @@ describe("Model: Event", function(){
         });
     });
     it("should not add a user if the the user is member of one of the linked bands", function(done){
-        event.addBands(band1._id, function(err, event){
+        Event.findByIdAndUpdate(event._id, {band: band1._id}, {new: true}, function(err, event){
             if (err) return done(err);
 
-            Event.findById(event._id, function(err, event){
-                if (err) return done(err);
-
-                event.addUsers(user1._id, function(err, event){
-                    expect(err).to.not.equal(null);
-                    done();
-                });
-            });
-        })
-    });
-
-    it("should remove one band from the event", function(done){
-        event.addBands(band1._id, function(err, event){
-            if (err) return done(err);
-
-            var docId = event.bands[0].id;
-
-            Event.findById(event._id, function(err, event){
-                if (err) return done(err);
-
-                event.removeBand(docId, function(err, event){
-                    if (err) return done(err);
-
-                    expect(event.bands).to.have.length(0);
-                    done();
-                });
+            event.addUsers(user1._id, function(err, event){
+                expect(err).to.not.equal(null);
+                done();
             });
         });
     });
+
     it("should remove one user from the event", function(done){
-        event.addUsers(user1.id, function(err, event){
+        Event.findByIdAndUpdate(event._id, {users: [user1._id]}, {new:true}, function(err, event){
             if (err) return done(err);
 
-            var docId = event.users[0].id;
-
-            Event.findById(event.id, function(err, event){
+            event.removeUser(user1._id, function(err, event){
                 if (err) return done(err);
 
-                event.removeUser(docId, function(err, event){
-                    if (err) return done(err);
-
-                    expect(event.users).to.have.length(0);
-                    done();
-                });
+                expect(event.users).to.have.length(0);
+                done();
             });
         });
+
     });
 });

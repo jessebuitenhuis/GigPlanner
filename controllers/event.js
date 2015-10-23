@@ -15,7 +15,7 @@ module.exports = function(app, express) {
     });
     router.get('/:id', function(req, res, next){
         Event.findById(req.params.id)
-            .populate('users.user bands.band')
+            .populate('users band')
             .exec(function (err, event) {
                 if (err) return next(err);
 
@@ -27,7 +27,7 @@ module.exports = function(app, express) {
         newEvent.save(function(err, event){
             if (err) return next(err);
 
-            Event.populate(event, 'users.user bands.band', function(err){
+            Event.populate(event, 'users band', function(err){
                 if (err) return next(err);
                 res.send(event);
             });

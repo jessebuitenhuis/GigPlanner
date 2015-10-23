@@ -46,7 +46,7 @@ describe('Controller: User', function(){
     });
     it("should return a list of users with link status to event (GET /)", function(done){
         band1.members.push({user: user1._id});
-        event1.bands.push({band: band1._id});
+        event1.band = band1._id;
         band1.save(function(err, band){
             event1.save(function(err, band){
                 request.get('/?view=linked&event=' + event1._id)

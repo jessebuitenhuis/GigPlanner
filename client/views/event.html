@@ -53,7 +53,7 @@
                 <th>Delete</th>
             </tr>
             <tr ng-repeat="user in event.users">
-                <td><a ui-sref="band({id:user.user._id})">{{ user.user.name.full }}</a></td>
+                <td><a ui-sref="band({id:user.user._id})">{{ user.name.full }}</a></td>
 
                 <td><button ng-click="event.$removeUser({docId: user._id})">Remove user</button></td>
             </tr>
