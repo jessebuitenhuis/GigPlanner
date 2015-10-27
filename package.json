@@ -4,6 +4,9 @@
   "description": "An app to easily keep track of upcoming gigs",
   "main": "index.js",
   "repository": "http://www.github.com/jessebuitenhuis/gigplanner",
+  "scripts" : {
+    "test": "make test"
+  },
   "keywords": [
     "music",
     "gigs"
