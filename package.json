@@ -4,7 +4,7 @@
   "description": "An app to easily keep track of upcoming gigs",
   "main": "index.js",
   "repository": "http://www.github.com/jessebuitenhuis/gigplanner",
-  "scripts" : {
+  "scripts": {
     "test": "mocha tdd --recursive"
   },
   "keywords": [
@@ -34,6 +34,7 @@
     "gulp-watch": "^4.3.5",
     "jsonwebtoken": "^5.4.0",
     "jwt-simple": "^0.3.1",
+    "mocha": "^2.3.3",
     "mongoose": "^4.1.10",
     "passport": "^0.3.0",
     "passport-facebook": "^2.0.0",
