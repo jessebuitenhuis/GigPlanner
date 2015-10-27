@@ -3,9 +3,6 @@
   "version": "0.1.0",
   "description": "An app to easily keep track of upcoming gigs",
   "main": "index.js",
-  "scripts": {
-    "test": "mocha --recursive"
-  },
   "repository": "http://www.github.com/jessebuitenhuis/gigplanner",
   "keywords": [
     "music",
