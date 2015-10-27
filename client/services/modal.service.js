@@ -29,7 +29,7 @@ angular.module('gigPlanner').service('Modal', function($uibModal){
                     }
                 }
             };
-            return Modal.open('SelectUser', {}, options);
+            return Modal.open('SelectUsers', {}, options);
         }
     };
     return Modal;

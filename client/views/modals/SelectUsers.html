@@ -1,0 +1,44 @@
+<h3>Select a user</h3>
+
+<div>
+    <input type="text" id="filter" class="form-control" ng-model="query" placeholder="Search in users...">
+</div>
+
+<form class="form-inline" ng-submit="addUser(newUser)" name="addUserForm">
+    <div class="form-group">
+        <label for="first-name">Naam</label>
+        <input type="text" ng-model="newUser.name.first" class="form-control" id="first-name" placeholder="John" required>
+    </div>
+    <div class="form-group">
+        <label for="middle-name" class="sr-only">Tussen</label>
+        <input type="text" ng-model="newUser.name.middle" class="form-control" id="middle-name" placeholder="the" size="5">
+    </div>
+    <div class="form-group">
+        <label for="last-name" class="sr-only">Achternaam</label>
+        <input type="text" ng-model="newUser.name.last" class="form-control" id="last-name" placeholder="Doe" required>
+    </div>
+    <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" ng-model="newUser.email" class="form-control" id="email" placeholder="me@hotmail.com" required>
+    </div>
+    <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" ng-model="newUser.password" class="form-control" id="password" placeholder="***" required>
+    </div>
+    <button type="submit" ng-disabled="addUserForm.$invalid">Add User</button>
+</form>
+<br/>
+
+
+<table class="table table-striped table-hover">
+    <tr>
+        <th>Naam</th>
+        <th></th>
+    </tr>
+    <tr ng-repeat="user in users | filter:isNotSelected | filter:query | limitTo:10:((currentPage-1)*10)">
+        <td>{{ user.name.full }}</td>
+        <td><button ng-click="$close(user)">Choose</button></td>
+    </tr>
+</table>
+
+<uib-pagination total-items="users.length" ng-model="currentPage"></uib-pagination>
