@@ -31,7 +31,9 @@ module.exports = function(app, express) {
         });
     });
     router.put('/:id?', function(req, res, next){
+        console.log(req.body);
         Band.findByIdAndUpdate(req.body._id, req.body, {new: true}, function(err, band){
+            console.log(err, band);
             if (err) return next(err);
             if (!band) return next(null, false);
 
