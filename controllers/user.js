@@ -1,4 +1,5 @@
-var User = require('../models/user');
+var User = require('../models/user'),
+    _ = require('underscore');
 
 module.exports = function(app, express) {
 
@@ -34,7 +35,8 @@ module.exports = function(app, express) {
         });
     });
     router.put('/:id?', function(req, res, next){
-        User.findByIdAndUpdate(req.body._id, req.body, {new: true}, function(err, user){
+        var data = _.omit(req.body, '_id');
+        User.findByIdAndUpdate(req.body._id, data, {new: true}, function(err, user){
             if (err) return next(err);
             res.send(user);
         });

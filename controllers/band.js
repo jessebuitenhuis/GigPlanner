@@ -1,4 +1,5 @@
-var Band = require('../models/band.js');
+var Band = require('../models/band.js'),
+    _ = require('underscore');
 
 module.exports = function(app, express) {
 
@@ -31,9 +32,8 @@ module.exports = function(app, express) {
         });
     });
     router.put('/:id?', function(req, res, next){
-        console.log(req.body);
-        Band.findByIdAndUpdate(req.body._id, req.body, {new: true}, function(err, band){
-            console.log(err, band);
+        var data = _.omit(req.body, '_id');
+        Band.findByIdAndUpdate(req.body._id, data, {new: true}, function(err, band){
             if (err) return next(err);
             if (!band) return next(null, false);
 
