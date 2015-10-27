@@ -5,7 +5,7 @@
   "main": "index.js",
   "repository": "http://www.github.com/jessebuitenhuis/gigplanner",
   "scripts" : {
-    "test": "make test"
+    "test": "mocha tdd --recursive"
   },
   "keywords": [
     "music",
