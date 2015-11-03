@@ -1,2 +1,3 @@
 # Created by .ignore support plugin (hsz.mobi)
 client/app.templates.js
+client/views/modals/selectUser.html

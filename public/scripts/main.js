@@ -109,6 +109,23 @@ $templateCache.put("views/user.html","<ol class=\"breadcrumb\">\n    <li><a ui-s
 $templateCache.put("views/users.html","<ol class=\"breadcrumb\">\n    <li><a ui-sref=\"dashboard\">Home</a></li>\n    <li class=\"active\">Users</li>\n</ol>\n\n<h1>Users</h1>\n\n<form class=\"form-inline\" ng-submit=\"addUser(newUser)\" name=\"addUserForm\">\n    <div class=\"form-group\">\n        <label for=\"first-name\">Naam</label>\n        <input type=\"text\" ng-model=\"newUser.name.first\" class=\"form-control\" id=\"first-name\" placeholder=\"John\" required>\n    </div>\n    <div class=\"form-group\">\n        <label for=\"middle-name\" class=\"sr-only\">Tussen</label>\n        <input type=\"text\" ng-model=\"newUser.name.middle\" class=\"form-control\" id=\"middle-name\" placeholder=\"the\" size=\"5\">\n    </div>\n    <div class=\"form-group\">\n        <label for=\"last-name\" class=\"sr-only\">Achternaam</label>\n        <input type=\"text\" ng-model=\"newUser.name.last\" class=\"form-control\" id=\"last-name\" placeholder=\"Doe\" required>\n    </div>\n    <div class=\"form-group\">\n        <label for=\"email\">Email</label>\n        <input type=\"email\" ng-model=\"newUser.email\" class=\"form-control\" id=\"email\" placeholder=\"me@hotmail.com\" required>\n    </div>\n    <div class=\"form-group\">\n        <label for=\"password\">Password</label>\n        <input type=\"password\" ng-model=\"newUser.password\" class=\"form-control\" id=\"password\" placeholder=\"***\" required>\n    </div>\n    <button type=\"submit\" ng-disabled=\"addUserForm.$invalid\">Add User</button>\n</form>\n<br/>\n\n<table class=\"table table-striped table-hover\">\n    <tr>\n        <th>Naam</th>\n        <th>Leeftijd</th>\n        <th>Verwijder</th>\n    </tr>\n    <tr ng-repeat=\"user in users\">\n        <td><a ui-sref=\"user({id: user._id})\">{{ user.name.full }}</a></td>\n        <td>{{ user.email }}</td>\n        <td><button ng-click=\"deleteUser(user)\">Delete</button></td>\n    </tr>\n</table>");
 $templateCache.put("views/modals/SelectBand.html","<h3>Select a user</h3>\n\n<div>\n    <input type=\"text\" id=\"filter\" class=\"form-control\" ng-model=\"filter\" placeholder=\"Search in bands...\">\n</div>\n\n<form class=\"form-inline\" ng-submit=\"addBand(newBand)\" name=\"addBandForm\">\n    <div class=\"form-group\">\n        <label for=\"name\">Naam</label>\n        <input type=\"text\" ng-model=\"newBand.name\" class=\"form-control\" id=\"name\" placeholder=\"Guns n Roses\" required>\n    </div>\n    <button type=\"submit\" ng-disabled=\"addBandForm.$invalid\">Add Band</button>\n</form>\n<br/>\n\n\n<table class=\"table table-striped table-hover\">\n    <tr>\n        <th>Naam</th>\n        <th></th>\n    </tr>\n    <tr ng-repeat=\"band in bands |filter:filter | limitTo:10:((currentPage-1)*10)\">\n        <td>{{ band.name }}</td>\n        <td><button ng-click=\"$close(band)\">Choose</button></td>\n    </tr>\n</table>\n\n<uib-pagination total-items=\"bands.length\" ng-model=\"currentPage\"></uib-pagination>");
 $templateCache.put("views/modals/SelectUsers.html","<h3>Select a user</h3>\n\n<div>\n    <input type=\"text\" id=\"filter\" class=\"form-control\" ng-model=\"query\" placeholder=\"Search in users...\">\n</div>\n\n<form class=\"form-inline\" ng-submit=\"addUser(newUser)\" name=\"addUserForm\">\n    <div class=\"form-group\">\n        <label for=\"first-name\">Naam</label>\n        <input type=\"text\" ng-model=\"newUser.name.first\" class=\"form-control\" id=\"first-name\" placeholder=\"John\" required>\n    </div>\n    <div class=\"form-group\">\n        <label for=\"middle-name\" class=\"sr-only\">Tussen</label>\n        <input type=\"text\" ng-model=\"newUser.name.middle\" class=\"form-control\" id=\"middle-name\" placeholder=\"the\" size=\"5\">\n    </div>\n    <div class=\"form-group\">\n        <label for=\"last-name\" class=\"sr-only\">Achternaam</label>\n        <input type=\"text\" ng-model=\"newUser.name.last\" class=\"form-control\" id=\"last-name\" placeholder=\"Doe\" required>\n    </div>\n    <div class=\"form-group\">\n        <label for=\"email\">Email</label>\n        <input type=\"email\" ng-model=\"newUser.email\" class=\"form-control\" id=\"email\" placeholder=\"me@hotmail.com\" required>\n    </div>\n    <div class=\"form-group\">\n        <label for=\"password\">Password</label>\n        <input type=\"password\" ng-model=\"newUser.password\" class=\"form-control\" id=\"password\" placeholder=\"***\" required>\n    </div>\n    <button type=\"submit\" ng-disabled=\"addUserForm.$invalid\">Add User</button>\n</form>\n<br/>\n\n\n<table class=\"table table-striped table-hover\">\n    <tr>\n        <th>Naam</th>\n        <th></th>\n    </tr>\n    <tr ng-repeat=\"user in users | filter:isNotSelected | filter:query | limitTo:10:((currentPage-1)*10)\">\n        <td>{{ user.name.full }}</td>\n        <td><button ng-click=\"$close(user)\">Choose</button></td>\n    </tr>\n</table>\n\n<uib-pagination total-items=\"users.length\" ng-model=\"currentPage\"></uib-pagination>");}]);
+angular.module('gigPlanner').directive('confirmValue', function(){
+    return {
+        require: 'ngModel',
+        scope: {
+            otherModelValue: '=confirmValue'
+        },
+        link: function(scope, element, attrs, ngModel) {
+            ngModel.$validators.confirmValue = function(modelValue){
+                return modelValue == scope.otherModelValue;
+            };
+
+            scope.$watch('otherModelValue', function(){
+                ngModel.$validate();
+            });
+        }
+    }
+});
 angular.module('gigPlanner').controller('ApplicationController', ["$scope", "Account", function($scope, Account){
     $scope.account = Account;
 }]);
@@ -255,23 +272,6 @@ angular.module('gigPlanner').controller('UserDetailController', ["User", "$scope
 
 
 }]);
-angular.module('gigPlanner').directive('confirmValue', function(){
-    return {
-        require: 'ngModel',
-        scope: {
-            otherModelValue: '=confirmValue'
-        },
-        link: function(scope, element, attrs, ngModel) {
-            ngModel.$validators.confirmValue = function(modelValue){
-                return modelValue == scope.otherModelValue;
-            };
-
-            scope.$watch('otherModelValue', function(){
-                ngModel.$validate();
-            });
-        }
-    }
-});
 angular.module('gigPlanner').controller('SelectBandModalController', ["Band", "$scope", "$modalInstance", function(Band, $scope, $modalInstance){
 
     Band.query(function(result){
