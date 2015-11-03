@@ -25,11 +25,9 @@ angular.module('gigPlanner').run(function($rootScope, Account, AuthEvents, api, 
     $rootScope.$on(AuthEvents.logout, Account.logout);
 
     $rootScope.$on('$stateChangeStart', function(event, toState){
-        if(toState.data && toState.data.auth) {
-            if (!Account.isLoggedIn()) {
-                event.preventDefault();
-                $state.go('login');
-            }
+        if(toState.data && toState.data.auth && !Account.isLoggedIn()) {
+            $state.go('login');
+            event.preventDefault();
         }
     });
 

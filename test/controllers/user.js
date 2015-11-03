@@ -15,12 +15,15 @@ describe('Controller: User', function(){
         var promises = [];
 
         promises.push(band1.save());
-        promises.push(event1.save());
         promises.push(user1.save());
 
         Promise.all(promises).then(function(){
             done();
         });
+    });
+    before(function(done){
+        event1.band = band1._id;
+        event1.save(done);
     });
     after(function(done){
         var promises = [];

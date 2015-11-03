@@ -15,7 +15,6 @@ describe("Model: Event", function(){
     before(function(done){
         var promise = [];
 
-        promise.push(event.save());
         promise.push(band1.save());
         promise.push(band2.save());
         promise.push(user1.save());
@@ -26,8 +25,13 @@ describe("Model: Event", function(){
         });
     });
 
+    before(function(done) {
+        event.band = band2._id;
+        event.save(done);
+    });
+
     beforeEach(function(done){
-        Event.findByIdAndUpdate(event._id, {users: [], bands:[]}, {new: true}, function(err, res){
+        Event.findByIdAndUpdate(event._id, {users: []}, {new: true}, function(err, res){
             if (err) return done(err);
 
             event = res;

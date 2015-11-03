@@ -11,8 +11,8 @@ var eventSchema = new Schema({
     type: { type: String, enum: types},
     date: Date,
     status: { type: String, enum: statuses },
-    creator: { type: Schema.Types.ObjectId, ref: 'User' },
-    band: { type: Schema.Types.ObjectId, ref: 'Band' },
+    creator: { type: Schema.Types.ObjectId, ref: 'User'},
+    band: { type: Schema.Types.ObjectId, ref: 'Band', required: true},
     users: [{ type: Schema.Types.ObjectId, ref: 'User' }],
     available: [{
         user: { type: Schema.Types.ObjectId, ref: 'User'},

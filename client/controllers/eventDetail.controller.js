@@ -16,18 +16,4 @@ angular.module('gigPlanner').controller('EventDetailController', function(Event,
         });
     };
 
-    $scope.selectBand = function() {
-        var selected = $scope.event.bands.map(function(band){
-            return band.band._id;
-        });
-        Modal.open('SelectBand', {selected: selected}).then(function(band){
-            $scope.event.$addBand({bandId: band._id}).catch(function(e){
-                $scope.bandsError = e.data;
-                $timeout(function(){
-                    $scope.bandsError = null;
-                }, 1000);
-            });
-        });
-    };
-
 });
