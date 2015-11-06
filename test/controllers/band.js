@@ -4,6 +4,7 @@ var config      = require('../../config/config.test'),
     request     = new require('supertest')(config.url + '/api/bands'),
     User        = new require('../../models/user'),
     Band        = require('../../models/band'),
+    Event       = require('../../models/event'),
     db          = require('../db');
 
 describe('Controller: Band', function(){
@@ -207,7 +208,6 @@ describe('Controller: Band', function(){
                     });
                 });
         });
-
 
     });
 });

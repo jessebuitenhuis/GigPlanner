@@ -7,7 +7,8 @@ module.exports = function(app, express) {
 
     /**
      * Returns a list of events
-     * @param {int} [band] - only return events for specified band
+     * @param {int} bandId - return events linked to band
+     * @returns {Array} events
      */
     router.get('/', function(req, res, next) {
         var query = {};

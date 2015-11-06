@@ -41,7 +41,6 @@ eventSchema.methods.addUsers = function(users, done){
         linkedUsers = linkedUsers.map(String);
 
         var usersToAdd = _.difference(users, linkedUsers);
-        console.log(users, linkedUsers, usersToAdd);
 
         if (!usersToAdd.length) return done(new Error('All users provided are already linked to this event.'));
 

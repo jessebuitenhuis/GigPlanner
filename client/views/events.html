@@ -5,19 +5,6 @@
 
 <h1>Events</h1>
 
-<form class="form-inline" ng-submit="addEvent(newEvent)" name="addEventForm">
-    <div class="form-group">
-        <label for="name">Naam</label>
-        <input type="text" ng-model="newEvent.name" class="form-control" id="name" placeholder="The Big Event" required>
-    </div>
-    <div class="form-group">
-        <label for="date">Datum</label>
-        <input type="date" ng-model="newEvent.date" class="form-control" id="date" required>
-    </div>
-    <button type="submit" ng-disabled="addEventForm.$invalid">Add Event</button>
-</form>
-<br/>
-
 <table class="table table-striped table-hover">
     <tr>
         <th>Naam</th>

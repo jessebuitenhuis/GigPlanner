@@ -81,20 +81,6 @@ describe("Controller: Event", function(){
                     done();
                 });
     });
-    it("should return a list of events linked to band (GET /?band=:bandId)", function(done){
-        Event.findByIdAndUpdate(event1._id, {
-            band: band1._id
-        }).then(function(){
-            request.get('/?band='+band1._id)
-                .set(auth)
-                .expect(200, function(err, res){
-                    if (err) done(err);
-
-                    expect(res.body).to.have.length(1);
-                    done();
-                });
-        });
-    });
     it('should return a single event with populated bands and users (GET /:id)', function(done){
         addUserAndBandToEvent().then(function(err, event) {
             request.get('/' + event1._id)
@@ -106,6 +92,16 @@ describe("Controller: Event", function(){
                     done();
                 });
         });
+    });
+    it('should get a list of events for a band', function(done){
+        request.get('/?band=' + band1._id)
+            .set(auth)
+            .expect(200, function(err, res){
+                if (err) return done(err);
+
+                expect(res.body).to.have.length(1);
+                done();
+            });
     });
 
     // POST
