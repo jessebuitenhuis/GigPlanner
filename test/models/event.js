@@ -31,10 +31,18 @@ describe("Model: Event", function(){
     });
 
     beforeEach(function(done){
-        Event.findByIdAndUpdate(event._id, {users: []}, {new: true}, function(err, res){
+        Event.findByIdAndUpdate(event._id, {band: band2._id, users: []}, {new: true}, function(err, res){
             if (err) return done(err);
 
             event = res;
+            done();
+        });
+    });
+    beforeEach(function(done){
+        Band.findByIdAndUpdate(band2._id, {members: []}, {new: true}, function(err, res){
+            if (err) return done(err);
+
+            band2 = res;
             done();
         });
     });
@@ -120,6 +128,84 @@ describe("Model: Event", function(){
                 done();
             });
         });
-
     });
+
+
+    describe("method: linkedUsers", function(){
+        it("should return 2 users linked to event trough band", function(done) {
+            Band.findByIdAndUpdate(band2._id, {members: [{user: user1._id}, {user: user2._id}]}, {new: true}, function(err){
+                if (err) return done(err);
+
+                event.linkedUsers(function(err, users){
+                    if(err) return done(err);
+
+                    expect(users).to.have.length(2);
+                    done();
+                });
+            });
+        });
+
+        it("should return 1 user linked to event trough users", function(done) {
+            Event.findByIdAndUpdate(event._id, {users: [user1._id]}, {new: true}, function(err, event){
+                if (err) return done(err);
+
+
+                event.linkedUsers(function(err, users){
+                    if (err) return done(err);
+
+                    expect(users).to.have.length(1);
+                    done();
+                });
+            });
+        });
+
+        it("should return 2 users, 1 linked through band, 1 linked trough users", function(done) {
+            Event.findByIdAndUpdate(event._id, {users: [user1._id]}, {new: true}, function(err, event){
+                Band.findByIdAndUpdate(band2._id, {members: [{user: user2._id}]}, function(err){
+                    if (err) return done(err);
+
+                    event.linkedUsers(function(err, users){
+                        if(err) return done(err);
+
+                        expect(users).to.have.length(2);
+                        done();
+                    });
+                });
+            });
+
+        });
+
+        it("should not return duplicate users in the linkedUsers list", function(done) {
+            Event.findByIdAndUpdate(event._id, {users: [user1._id]}, {new: true}, function(err, event){
+                Band.findByIdAndUpdate(band2._id, {members: [{user: user1._id}, {user: user2._id}]}, function(err){
+                    if (err) return done(err);
+
+
+                    event.linkedUsers(function(err, users){
+                        if (err) return done(err);
+
+                        expect(users).to.have.length(2);
+                        done();
+                    });
+                });
+            });
+
+        });
+    });
+
+    describe("method: getAttendees", function(){
+        it("should return 2 attendees", function(done){
+            Band.findByIdAndUpdate(band2._id, {members: [{user: user1._id}, {user: user2._id}]}, function(err) {
+                if (err) return done(err);
+
+                event.getAttendees(function (err, attendees) {
+                    if(err) return done(err);
+
+                    expect(attendees).to.have.length(2);
+                    done();
+                });
+            });
+        });
+    });
+
 });

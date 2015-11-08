@@ -14,7 +14,7 @@ var eventSchema = new Schema({
     creator: { type: Schema.Types.ObjectId, ref: 'User'},
     band: { type: Schema.Types.ObjectId, ref: 'Band', required: true},
     users: [{ type: Schema.Types.ObjectId, ref: 'User' }],
-    available: [{
+    rsvp: [{
         user: { type: Schema.Types.ObjectId, ref: 'User'},
         status: {type: String, enum: available}
     }]
@@ -61,6 +61,38 @@ eventSchema.methods.removeUser = function(userId, done){
 
         Event.populate(event, 'users band', done);
     });
+};
+eventSchema.methods.linkedUsers = function(done) {
+    var linkedUsers = [];
+
+    // add users from users array
+    linkedUsers.push.apply(linkedUsers, this.users);
+
+    // add unique users from band
+    Event.populate(this, 'band', function(err, event){
+        if (err) return done(err);
+
+        var linkedUsersString = linkedUsers.map(String);
+
+        if (event.band) {
+            event.band.members.forEach(function (member) {
+                var userExists = linkedUsersString.indexOf(String(member.user)) != -1;
+                if (!userExists) linkedUsers.push(member.user);
+            });
+        }
+
+        done(null, linkedUsers);
+    });
+};
+
+eventSchema.methods.getAttendees = function(done) {
+
+    this.linkedUsers(function(err, users){
+        if (err) return done(err);
+
+        done(null, users);
+    });
+
 };
 
 
